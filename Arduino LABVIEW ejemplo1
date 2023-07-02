@@ -1,0 +1,89 @@
+/*    _^__                                                            __^__    
+    ( ___ )----------------------------------------------------------( ___ ) 
+     | / |  ESTE PROGRAMA CONTROLA EL PARO Y MARCHA                   | \ |  
+     | / |  DE UNA MAQUINA ELECTRICA (MOTOR DC O AC) DESDE LABVIEW,   | \ |
+     | / |  SE PUEDE IMPLMENTAR MEDIANTE UN PUERTO VIRTUAL EN PROTEUS | \ |  
+     | / |  PARA QUIENESNO CUENTAN CON UN ARDUINO                     | \ |  
+     | / |                                                            | \ | 
+     |___|   AUTOR: LUIS ALFREDO TORRES ESCALANTE                     |___|   
+    (_____)----------------------------------------------------------(_____) 
+*/
+
+
+    
+//definismos las salidas
+#define luz_inicio    8
+#define luz_paro      9 
+#define luz_arranque  10
+#define motor 11
+
+//defnimos las variables 
+
+int contador=0;
+char dato;
+
+
+void setup() {
+  
+  // definimos los pines como salida 
+Serial.begin(9600);
+pinMode(8, OUTPUT);   //LED AZUL
+pinMode(9, OUTPUT);   //LED ROJO
+pinMode(10, OUTPUT);  //LED VERDE
+pinMode(11, OUTPUT);  //MOTOR
+
+while (contador < 3)
+  {
+    
+    digitalWrite(luz_inicio, HIGH);
+    delay(500);
+    digitalWrite(luz_inicio, LOW);
+    delay(500);
+    contador++;
+  }
+  contador = 0;
+  digitalWrite(luz_paro,HIGH);
+
+}
+
+
+
+
+void loop() {
+ 
+f_paro();
+f_marcha();  
+
+}
+
+
+
+
+void f_paro(){
+  leer_puerto();
+    if(dato=='P'){
+      digitalWrite(motor, LOW);
+      digitalWrite(luz_arranque, LOW);
+      digitalWrite(luz_paro, HIGH);
+      
+      }
+}
+
+
+void f_marcha(){
+  leer_puerto();
+    if(dato=='M'){
+      digitalWrite(motor, HIGH);
+      digitalWrite(luz_paro, LOW);
+      digitalWrite(luz_arranque, HIGH);
+      }
+}
+
+
+void leer_puerto()
+{
+  if (Serial.available() > 0) {     
+    dato = Serial.read(); 
+  }
+}
+
